@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: avatar-svc
+spec:
+  ports:
+    - port: 80
+      targetPort: 8087
+  selector:
+    app: avatar-pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avatar-deployment
+spec:
+  selector:
+    matchLabels:
+      app: avatar-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: avatar-pod
+    spec:
+      containers:
+      - name: avatar-pod
+        image: pash7e7/project_avatar
+        ports:
+        - containerPort: 8087
+        env:
+          - name: POSTGRES_HOSTS
+            value: avatar-postgres-svc:80
+          - name: POSTGRES_DB
+            value: avatar
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: avatar
+          - name: DB_AVATAR_DBNAME
+            value: avatar
+          - name: DB_AVATAR_HOSTNAME
+            value: dbAvatar
+          - name: DB_AVATAR_PORT
+            value: "5432"
+          - name: DB_AVATAR_PSW
+            value: avatar
+          - name: DB_AVATAR_SSL
+            value: disable
+          - name: DB_AVATAR_USER
+            value: postgres
+          - name: SERVICE_AVATAR_PORT
+            value: "8087"

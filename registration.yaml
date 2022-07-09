@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: registration-svc
+spec:
+  ports:
+    - port: 80
+      targetPort: 8081
+  selector:
+    app: registration-pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registration-deployment
+spec:
+  selector:
+    matchLabels:
+      app: registration-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: registration-pod
+    spec:
+      containers:
+      - name: registration-pod
+        image: pash7e7/project_registration
+        ports:
+        - containerPort: 8081
+        env:
+          - name: POSTGRES_HOSTS
+            value: registration-postgres-svc:80
+          - name: POSTGRES_DB
+            value: schedule
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PWD
+            value: qwerty
+          - name: RABBIT_HOST
+            value: rabbitmq-svc
+          - name: RABBIT_PORT
+            value: "80"
+          - name: RABBIT_USERNAME
+            value: guest
+          - name: RABBIT_PASSWORD
+            value: guest
+          - name: SERVER_PORT
+            value: "8081"
+          - name: RABBIT_QUEUE
+            value: mail_processed
+          - name: USER_SERVICE_HOSTS
+            value: user-svc:80
+          - name: NGINX_PORT
+            value: "80"
+          - name: SCHEDULE_SERVICE_HOSTS
+            value: cum
+          - name: RABBITMQ_DEFAULT_USER
+            value: guest
+          - name: RABBITMQ_DEFAULT_PASS
+            value: guest
+

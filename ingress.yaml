@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS, DELETE, PATCH"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+spec:
+  rules:
+   - host: app.example.com
+     http:
+        paths:
+          - pathType: Prefix
+            path: /rabbitmq
+            backend:
+              service:
+                name: echo1
+                port: 
+                  number: 80
+          - pathType: Prefix
+            path: /registration
+            backend:
+              service:
+                name: registration-svc
+                port: 
+                  number: 80
+
