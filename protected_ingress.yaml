@@ -1,12 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: main-ingress
+  name: protected-ingress
   annotations:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS, DELETE, PATCH"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+
+    # nginx.ingress.kubernetes.io/auth-url: "https://oauth.ssotest.staging.talkingquickly.co.uk/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-url: "http://app.example.com/"
 spec:
   rules:
    - host: app.example.com
@@ -20,10 +23,17 @@ spec:
                 port: 
                   number: 80
           - pathType: Prefix
-            path: /registration
+            path: /schedule
             backend:
               service:
-                name: registration-svc
+                name: schedule-svc
+                port: 
+                  number: 80
+          - pathType: Prefix
+            path: /user
+            backend:
+              service:
+                name: user-svc
                 port: 
                   number: 80
 

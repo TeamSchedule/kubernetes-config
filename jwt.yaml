@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jwt-svc
+spec:
+  ports:
+    - port: 80
+      targetPort: 8082
+  selector:
+    app: jwt-pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jwt-deployment
+spec:
+  selector:
+    matchLabels:
+      app: jwt-pod
+  replicas: 1
+  template:
+    metadata:
+      name: jwt-pod
+      labels:
+        app: jwt-pod
+    spec:
+      containers:
+      - name: jwt-pod
+        image: pash7e7/project_jwt
+        ports:
+        - containerPort: 8082
+        env:
+          - name: JWT_SECRET_KEY
+            value: kXpBmV^_|BFq#c.-""B:cd#k6-/EuVp]
+          - name: USER_SERVICE_HOSTS
+            value: user-svc:80
